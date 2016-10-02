@@ -1,0 +1,25 @@
+{
+  "name": "simple-game-dev",
+  "version": "1.0.0",
+  "description": "",
+  "main": "webpack.config.js",
+  "dependencies": {
+    "ts-loader": "^0.8.2",
+    "typescript": "^2.0.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack-dev-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chips5k/simple-game-dev.git"
+  },
+  "author": "Callem Pittard <callem.pittard@gmail.com> (https://github.com/chips5k)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chips5k/simple-game-dev/issues"
+  },
+  "homepage": "https://github.com/chips5k/simple-game-dev#readme"
+}
