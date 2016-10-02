@@ -11,8 +11,8 @@ export default class PongRenderer {
     }
 
     visit(o: GameStateObject) {
-
-        switch(typeof(o)) {
+        let i:any = o.constructor;
+        switch(i.name) {
             case 'Puck':
                 this.visitPuck(<Puck>o);
             break;

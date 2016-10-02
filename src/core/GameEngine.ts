@@ -56,6 +56,7 @@ export default class Game {
             tState.advance(interp);
             
         } 
+        
         this.renderer.render(tState);
     }
 

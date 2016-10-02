@@ -15,7 +15,7 @@ export default class GameState {
         
         this.elapsed = 0;
 
-        this.objects = [];
+        this.objects = objects ? objects : [];
     }
 
     addObject(o: GameStateObject) {
@@ -23,11 +23,9 @@ export default class GameState {
     }
 
     accept(renderer: GameStateRenderer) {
-
         for(var i in this.objects) {
-            renderer.visit(i);
+            renderer.visit(this.objects[i]);
         }
-
     }
 
     advance(milliseconds: number) {

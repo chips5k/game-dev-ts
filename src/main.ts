@@ -1,5 +1,7 @@
+import Pong from './Pong/Pong';
 
-var canvas = document.getElementById("main");
-var context = canvas.getContext("2d");
+var canvas = <HTMLCanvasElement>document.getElementById("main");
+var ctx = canvas.getContext("2d");
 
-var pong = new Pong(canvas, context);
+var pong = new Pong(window, canvas, ctx);
+ 
