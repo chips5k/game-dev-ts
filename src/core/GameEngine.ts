@@ -27,14 +27,7 @@ export default class Game {
         this.updateMillis = 1000 / 60;
     
     }
-
-    sleep(ticks: number)
-    {
-       
-        var now = new Date().getTime();
-        while(new Date().getTime() < now + ticks){ /* do nothing */ } 
-    }
-
+    
     run() {
         this.requestFrame();
 
