@@ -11,26 +11,8 @@
     <body>
 
         <canvas id="main" width="640" height="480"></canvas>
-
-        <script src="lib/Game.js"></script>
-
-        <script>
-
-            var canvas = document.getElementById("main");
-            var context = canvas.getContext("2d");
-
-            var simpleObject = new SimpleSquareGameObject();
-            var state = new GameState(canvas.width, canvas.height);
-            state.gameObjects.push(simpleObject);
-            
-
-            var simpleRenderer = new SimpleRenderer(context, canvas);
-            var game = new Game(window, state, simpleRenderer);
-
-            game.run();
-                 
-
-            
-        </script>
+        <script src="dist/core.js"></script>
+        <script src="dist/pong.js"></script>
+        
     </body>
 </html>
