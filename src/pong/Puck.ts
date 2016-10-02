@@ -13,8 +13,8 @@ export default class Puck implements GameStateObject {
         this.y = y;
         this.w = 30;
         this.h = 30;
-        this.vX = vX ? vX : 5;
-        this.vY = vY ? vY : 5;
+        this.vX = vX ? vX : 10;
+        this.vY = vY ? vY : 10;
 
     }
 

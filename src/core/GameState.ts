@@ -34,19 +34,19 @@ export default class GameState {
             var o = this.objects[i];
 
             if(o.x + 30 >= this.boundingWidth) {
-                o.vX = -5;
+                o.vX = -10;
             }
 
             if(o.x < 0) {
-                o.vX = 5;
+                o.vX = 10;
             }
 
             if(o.y + 30 >= this.boundingHeight) {
-                o.vY = -5;
+                o.vY = -10;
             }
 
             if(o.y < 0) {
-                o.vY = 5;
+                o.vY = 10;
             }
 
             o.update(milliseconds);

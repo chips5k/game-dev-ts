@@ -23,14 +23,22 @@ export default class Game {
         this.currentMillis = this.startMillis;
         this.deltaMillis = 0;
         this.accumulatedMillis = 0;
-        this.updateMillis = 60 / 2;
+        //Target 60 updates per second
+        this.updateMillis = 1000 / 60;
     
+    }
+
+    sleep(ticks: number)
+    {
+       
+        var now = new Date().getTime();
+        while(new Date().getTime() < now + ticks){ /* do nothing */ } 
     }
 
     run() {
         this.requestFrame();
 
-        while(this.accumulatedMillis > 0) {
+        while(this.accumulatedMillis >= this.updateMillis) {
             let diff = this.accumulatedMillis - this.updateMillis;
             
             if(diff >= 0) {
@@ -45,25 +53,29 @@ export default class Game {
     }
 
     update() {
-        this.state.advance(this.deltaMillis);
+        this.state.advance(this.updateMillis);
     }
 
     render() {
         var tState = this.state.clone();
-        var interp = this.accumulatedMillis * 0.5;
-        
-        if(interp >= 5 && interp <= 16) {
-            tState.advance(interp);
-            
-        } 
-        
+        var interp = this.accumulatedMillis / 2;
         this.renderer.render(tState);
     }
 
     requestFrame() {
+        
         let prevMillis = this.currentMillis;
         this.currentMillis = this.window.performance.now();
         this.deltaMillis = this.currentMillis - prevMillis;
+
+        //Clamp the delta millis, to prevent spiral of death
+        //E.g only allow a max of 9~ updates before rendering
+        //Otherwise we begin lagging behind more and more
+        //and never actually catch up
+        if(this.deltaMillis > 150) {
+            this.deltaMillis = 150;
+        }
+
         this.accumulatedMillis += this.deltaMillis;
         this.window.requestAnimationFrame(() => { this.run(); });
     }
