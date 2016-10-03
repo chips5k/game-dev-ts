@@ -6,7 +6,8 @@ export default class Game {
     private state: GameState;
     private renderer: GameStateRenderer;
 
-    private totalTime: number;
+    private totalSimulatedTime: number;
+    private totalRunningTime: number;
     private deltaTime: number;
     private currentTime: number;
     private accumulatedTime: number;
@@ -18,7 +19,8 @@ export default class Game {
         this.state = state;
         this.renderer = renderer;
 
-        this.totalTime = 0;
+        this.totalSimulatedTime = 0;
+        this.totalRunningTime = 0;
         this.currentTime = 0;
         this.deltaTime = 1000 / 60; //60 updates per second
         this.accumulatedTime = 0;
@@ -26,6 +28,8 @@ export default class Game {
     }
     
     run() {
+        console.log('Total simulated time: ', this.totalSimulatedTime);
+        console.log('Total running time: ', this.totalRunningTime);
         //Queue the next run first - apparantly this is the best
         //approach for performance reasons
         this.window.requestAnimationFrame(() => { this.run(); });
@@ -36,6 +40,7 @@ export default class Game {
 
         //Calculate the time elapsed since the last run of the loop[]
         let timeSinceLastRun = this.currentTime - previousTime;
+        this.totalRunningTime += timeSinceLastRun;
 
         //Clamp the max amount of catch up time per run loop
         //Prefer to slow the sim down consistently, rather than spiral into
@@ -54,7 +59,7 @@ export default class Game {
             //Consume a delta chunk of accumulated time
             this.accumulatedTime -= this.deltaTime;
             //Track the total simulated time
-            this.totalTime += this.deltaTime;
+            this.totalSimulatedTime += this.deltaTime;
         }
         
         
