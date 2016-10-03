@@ -43,8 +43,8 @@ export default class Game {
         this.totalRunningTime += timeSinceLastRun;
 
         //Clamp the max amount of catch up time per run loop
-        //Prefer to slow the sim down consistently, rather than spiral into
-        //exponential slowness
+        //Prefer to slow the sim down consistently, rather 
+        //than spiral into exponential slowness
         if(timeSinceLastRun > 250) {
             timeSinceLastRun = 250;
         }
