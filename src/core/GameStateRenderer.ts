@@ -1,9 +1,8 @@
 import GameState from './GameState';
-import GameStateObject from './GameStateObject';
+import Visitor from './Visitor';
 
-interface GameStateRenderer {
+interface GameStateRenderer extends Visitor {
     render(state: GameState): void;
-    visit(o: GameStateObject): void;
 }
 
 export default GameStateRenderer;

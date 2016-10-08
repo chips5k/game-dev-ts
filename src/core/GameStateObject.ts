@@ -1,9 +1,6 @@
-interface GameStateObject {
-    vY: number;
-    vX: number;
-    x: number;
-    y: number;
+import Visitable from './Visitable';
 
+interface GameStateObject extends Visitable{
     update(milliseconds: number): void;
     clone(): GameStateObject;
 }

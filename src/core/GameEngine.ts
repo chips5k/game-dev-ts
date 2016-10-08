@@ -1,35 +1,17 @@
 import GameState from './GameState';
 import GameStateRenderer from './GameStateRenderer';
+import GameStateSimulator from './GameStateSimulator';
+export default class GameEngine {
 
-export default class Game {
-    private window: any;
-    private state: GameState;
-    private renderer: GameStateRenderer;
+    totalSimulatedTime: number = 0;
+    totalRunningTime: number = 0;
+    deltaTime: number = 1000 / 60;
+    currentTime: number = 0;
+    accumulatedTime: number = 0;
 
-    private totalSimulatedTime: number;
-    private totalRunningTime: number;
-    private deltaTime: number;
-    private currentTime: number;
-    private accumulatedTime: number;
-
-
-    constructor(window: any, state: GameState, renderer: GameStateRenderer) {
-        
-        this.window = window;
-        this.state = state;
-        this.renderer = renderer;
-
-        this.totalSimulatedTime = 0;
-        this.totalRunningTime = 0;
-        this.currentTime = 0;
-        this.deltaTime = 1000 / 60; //60 updates per second
-        this.accumulatedTime = 0;
-    
-    }
+    constructor(public window: any, public state: GameState, public renderer: GameStateRenderer, public simulator: GameStateSimulator) {}
     
     run() {
-        console.log('Total simulated time: ', this.totalSimulatedTime);
-        console.log('Total running time: ', this.totalRunningTime);
         //Queue the next run first - apparantly this is the best
         //approach for performance reasons
         this.window.requestAnimationFrame(() => { this.run(); });
@@ -55,7 +37,7 @@ export default class Game {
 
         while(this.accumulatedTime >= this.deltaTime) {
             //Update in delta incremenets
-            this.state.advance(this.deltaTime);
+            this.simulator.simulate(this.state, this.deltaTime);
             //Consume a delta chunk of accumulated time
             this.accumulatedTime -= this.deltaTime;
             //Track the total simulated time
@@ -64,8 +46,9 @@ export default class Game {
         
         
         //Finally render the resulting frame
-        var tState = this.state.clone();
-        var interp = this.accumulatedTime / this.deltaTime;
+        let tState = this.state.clone();
+        this.simulator.simulate(tState, this.accumulatedTime / this.deltaTime);
+
         this.renderer.render(tState);
     }
     

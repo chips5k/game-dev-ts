@@ -1,62 +1,32 @@
 import GameStateObject from './GameStateObject';
 import GameStateRenderer from './GameStateRenderer';
+import GameStateSimulator from './GameStateSimulator';
+import Visitable from './Visitable';
+import Visitor from './Visitor';
 
-export default class GameState {
-    private elapsed: number;
-    private boundingWidth: number;
-    private boundingHeight: number;
-
-    private objects: GameStateObject[];
+export default class GameState implements Visitable{
+    objects: GameStateObject[] = [];
     
-
-    constructor(w: number, h: number, e?: number, objects?: GameStateObject[]) {
-        this.boundingWidth = w;
-        this.boundingHeight = h;
-        
-        this.elapsed = 0;
-
-        this.objects = objects ? objects : [];
-    }
+    constructor() { }
 
     addObject(o: GameStateObject) {
         this.objects.push(o);
     }
 
-    accept(renderer: GameStateRenderer) {
-        for(var i in this.objects) {
-            renderer.visit(this.objects[i]);
+    accept(visitor: Visitor) {
+       for(var i in this.objects) {
+            visitor.visit(this.objects[i]);
         }
     }
-
-    advance(milliseconds: number) {
-        for(var i in this.objects) {
-
-            var o = this.objects[i];
-
-            if(o.x + 30 >= this.boundingWidth) {
-                o.vX = -10;
-            }
-
-            if(o.x < 0) {
-                o.vX = 10;
-            }
-
-            if(o.y + 30 >= this.boundingHeight) {
-                o.vY = -10;
-            }
-
-            if(o.y < 0) {
-                o.vY = 10;
-            }
-
-            o.update(milliseconds);
-        }
-    }
-
+    
+ 
     clone(): GameState {
-        return new GameState(this.boundingWidth, this.boundingHeight, this.elapsed, this.objects.map(function(n) {
+        let gs = new GameState();
+        gs.objects = this.objects.map(function(n) {
             return n.clone();
-        }));
+        });
+
+        return gs;
     }
 
 }
