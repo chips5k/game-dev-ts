@@ -4,7 +4,7 @@ import Puck from './Puck';
 import Paddle from './Paddle';
 
 export default class PongRenderer {
-    constructor(private ctx: any, private canvas: any) {}
+    constructor(private ctx: CanvasRenderingContext2D, private canvas: HTMLCanvasElement) {}
     
     render(state: GameState) {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -26,10 +26,20 @@ export default class PongRenderer {
     }
 
     visitPuck(puck: Puck) {
-        this.ctx.fillRect(puck.rigidBody.position.x,puck.rigidBody.position.y, puck.rigidBody.dimensions.x, puck.rigidBody.dimensions.y);
+        this.ctx.fillRect(
+            puck.rigidBody.position.x,
+            puck.rigidBody.position.y, 
+            puck.rigidBody.dimensions.x, 
+            puck.rigidBody.dimensions.y
+        );
     }
  
     visitPaddle(paddle: Paddle) {
-         this.ctx.fillRect(paddle.rigidBody.position.x,paddle.rigidBody.position.y, paddle.rigidBody.dimensions.x, paddle.rigidBody.dimensions.y);
+         this.ctx.fillRect(
+            paddle.rigidBody.position.x,
+            paddle.rigidBody.position.y, 
+            paddle.rigidBody.dimensions.x, 
+            paddle.rigidBody.dimensions.y
+        );
     }
 } 

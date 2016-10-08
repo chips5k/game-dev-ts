@@ -4,12 +4,13 @@ import PongRenderer from './PongRenderer';
 import PongSimulator from './PongSimulator';
 import Puck from './Puck';
 import Paddle from './Paddle';
+import PlayerController from './PlayerController';
 
 export default class Pong {
     engine: GameEngine;
     
     
-    constructor(window: any, canvas: any, context: any) {
+    constructor(window: Window, canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) {
 
         //Setup game core items
         let renderer = new PongRenderer(context, canvas);
@@ -34,9 +35,13 @@ export default class Pong {
         state.addObject(paddleA);
         state.addObject(paddleB);
         state.addObject(puck);
+
+        let playerController = new PlayerController(paddleA);
+
+        window.addEventListener('keydown', (e: KeyboardEvent) => { playerController.handleInput(e); });
         
         engine.run();
-    }
+    } 
 
 
 

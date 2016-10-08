@@ -22,7 +22,6 @@ export default class Puck implements GameStateObject {
     clone(): Puck {
        let p = new Puck(this.rigidBody.position);
        p.rigidBody.velocity = this.rigidBody.velocity.clone();
-
        return p;
     }
 }

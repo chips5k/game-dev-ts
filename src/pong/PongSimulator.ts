@@ -7,7 +7,7 @@ export default class PongSimulator implements GameStateSimulator {
     delta: number = 0;
     elapsed: number = 0;
 
-    constructor(public canvas: any) {}
+    constructor(public canvas: HTMLCanvasElement) {}
 
     simulate(state: GameState, milliseconds: number) {
         this.delta = milliseconds;
@@ -34,6 +34,25 @@ export default class PongSimulator implements GameStateSimulator {
     }
 
     visitPaddle(paddle: Paddle) {
+        let r = paddle.rigidBody;
+
+        if(r.velocity.y == 0) {
+            r.position.y += this.delta * r.acceleration.y; 
+        } else {
+            r.position.y += r.velocity.y * this.delta * r.acceleration.y; 
+        }
         
+
+        if(r.position.y < 0 ) {
+            r.position.y = 0;
+            r.velocity.y = 0;
+            r.acceleration.y = 0;
+        }
+
+        if(r.position.y + r.dimensions.y > this.canvas.height) {
+            r.position.y = this.canvas.height - r.dimensions.y;
+            r.velocity.y = 0;
+            r.acceleration.y = 0;
+        }
     }
 }

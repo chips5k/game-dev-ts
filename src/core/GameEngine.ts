@@ -9,7 +9,7 @@ export default class GameEngine {
     currentTime: number = 0;
     accumulatedTime: number = 0;
 
-    constructor(public window: any, public state: GameState, public renderer: GameStateRenderer, public simulator: GameStateSimulator) {}
+    constructor(public window: Window, public state: GameState, public renderer: GameStateRenderer, public simulator: GameStateSimulator) {}
     
     run() {
         //Queue the next run first - apparantly this is the best
