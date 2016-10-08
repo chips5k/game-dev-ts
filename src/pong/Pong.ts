@@ -26,6 +26,8 @@ export default class Pong {
         puck.rigidBody.position.x = (canvas.width / 2) - (puck.rigidBody.dimensions.x / 2);
         puck.rigidBody.position.y = (canvas.height / 2) - (puck.rigidBody.dimensions.x / 2);
         
+        puck.rigidBody.velocity.x = Math.random() > 0.5 ? 0.5 : -0.5;
+
         paddleA.rigidBody.position.x = 5;
         paddleA.rigidBody.position.y = (canvas.height / 2) - (paddleA.rigidBody.dimensions.y / 2);
 
