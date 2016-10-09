@@ -110,6 +110,19 @@ export default class PongSimulator implements GameStateSimulator {
     visitPaddle(paddle: Paddle) {
         let r = paddle.rigidBody;
 
+        r.position.y += r.velocity.y * this.delta;
+
+        if(r.position.y < 0 ) {
+            r.position.y = 0;
+            r.velocity.y = 0;
+            r.acceleration.y = 0;
+        }
+
+        if(r.position.y + r.dimensions.y > this.canvas.height) {
+            r.position.y = this.canvas.height - r.dimensions.y;
+            r.velocity.y = 0;
+            r.acceleration.y = 0;
+        }
        
         if(r.acceleration.y > 0) {
             r.acceleration.y -= 0.0005;
@@ -139,32 +152,5 @@ export default class PongSimulator implements GameStateSimulator {
             }
         }
         
-
-
-        r.position.y += r.velocity.y * this.delta;
-            
-        
-     
-
-        // if(r.velocity.y > 0) {
-        //     //apply friction
-        //     r.velocity.y -= 0.05 * this.delta;
-        // } else if (r.velocity.y < 0) {
-        //     //apply friction
-        //     r.velocity.y += 0.05 * this.delta;
-        //     console.log('wtf');
-        // }
-
-        if(r.position.y < 0 ) {
-            r.position.y = 0;
-            r.velocity.y = 0;
-            r.acceleration.y = 0;
-        }
-
-        if(r.position.y + r.dimensions.y > this.canvas.height) {
-            r.position.y = this.canvas.height - r.dimensions.y;
-            r.velocity.y = 0;
-            r.acceleration.y = 0;
-        }
     }
 }
