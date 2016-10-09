@@ -1,33 +1,30 @@
 import Paddle from './Paddle';
 
 export default class PlayerController {
+    private keysDown: { [id: string] : boolean} = {};
+
     constructor(public paddle: Paddle) {}
 
-    handleInput(e: KeyboardEvent) {
+    handleKeyDown(e: KeyboardEvent) { 
+        this.keysDown[e.key] = true;
         
-        switch(e.key) {
-            case 'a':
-            case 'w':
-               
-                this.paddle.rigidBody.acceleration.y += -0.001;
-                if(this.paddle.rigidBody.acceleration.y < -0.003) {
-                    this.paddle.rigidBody.acceleration.y = 0;
-                }
-
-                
-            break;
-
-            case 's':
-            case 'd':
-                
-                this.paddle.rigidBody.acceleration.y += 0.001;
-                if(this.paddle.rigidBody.acceleration.y > 0.003) {
-                    this.paddle.rigidBody.acceleration.y = 0;
-                }
-            break;
-        }
         
     }
 
+    handleKeyUp(e: KeyboardEvent) {
+       delete this.keysDown[e.key];
+    }
 
+    processInput() {
+        
+        if(this.keysDown['a'] || this.keysDown['w']) {
+            
+            this.paddle.rigidBody.acceleration.y = -0.025;
+        }
+
+        if(this.keysDown['s'] || this.keysDown['d']) {
+            this.paddle.rigidBody.acceleration.y = 0.025;
+        }
+    }
+    
 }   

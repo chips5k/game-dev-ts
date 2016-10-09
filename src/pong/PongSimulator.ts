@@ -2,13 +2,14 @@ import GameStateSimulator from '../core/GameStateSimulator';
 import GameState from '../core/GameState';
 import Puck from './Puck';
 import Paddle from './Paddle';
+import PlayerController from './PlayerController';
 
 export default class PongSimulator implements GameStateSimulator {
     delta: number = 0;
     elapsed: number = 0;
     state: GameState;
 
-    constructor(public canvas: HTMLCanvasElement) {}
+    constructor(public canvas: HTMLCanvasElement, public playerController: PlayerController) {}
 
     simulate(state: GameState, milliseconds: number) {
         this.delta = milliseconds;
@@ -110,47 +111,43 @@ export default class PongSimulator implements GameStateSimulator {
     visitPaddle(paddle: Paddle) {
         let r = paddle.rigidBody;
 
-        r.position.y += r.velocity.y * this.delta;
+        this.playerController.processInput();
 
+        //Canvas collision check
         if(r.position.y < 0 ) {
             r.position.y = 0;
             r.velocity.y = 0;
-            r.acceleration.y = 0;
         }
 
+        //Canvas collision check
         if(r.position.y + r.dimensions.y > this.canvas.height) {
             r.position.y = this.canvas.height - r.dimensions.y;
             r.velocity.y = 0;
-            r.acceleration.y = 0;
         }
-       
-        if(r.acceleration.y > 0) {
-            r.acceleration.y -= 0.0005;
-            if(r.acceleration.y < 0) {
-                r.acceleration.y = 0;
-            }
-        } else if(r.acceleration.y < 0) {
-            r.acceleration.y += 0.0005;
-            if(r.acceleration.y > 0) {
-                r.acceleration.y = 0;
-            }
-        }
+
+        r.position.y += r.velocity.y * this.delta;
         
-
-        r.velocity.y += r.acceleration.y * this.delta;
-
+        r.velocity.y += r.acceleration.y;
+        
        
+        
         if(r.velocity.y > 0) {
-            r.velocity.y -= 0.0005;
-            if(r.velocity.y < 0) {
-                r.velocity.y = 0;
-            }
+            r.velocity.y += -0.0001 * this.delta;
+            if(r.velocity.y < 0) { r.velocity.y = 0; }
         } else if(r.velocity.y < 0) {
-            r.velocity.y += 0.0005;
-            if(r.velocity.y > 0) {
-                r.velocity.y = 0;
-            }
+            r.velocity.y += 0.0001 * this.delta;
+            if(r.velocity.y > 0) { r.velocity.y = 0; }
         }
+
+        if(r.velocity.y > 0.5) {
+            r.velocity.y = 0.5;
+        }
+
+        if(r.velocity.y < -0.5) {
+            r.velocity.y = -0.5;
+        }
+
+        r.acceleration.y = 0;
         
     }
 }
