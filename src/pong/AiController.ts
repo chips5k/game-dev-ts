@@ -10,15 +10,18 @@ export default class AiController {
 
         let distanceY = puck.rigidBody.position.y + puck.rigidBody.dimensions.y / 2 -  this.paddle.rigidBody.position.y + this.paddle.rigidBody.dimensions.y / 2;
 
+
+        //Calculate distance from puck X coord to paddle X coord   
+        let distanceToPaddleX = this.paddle.rigidBody.position.x - puck.rigidBody.position.x;
+        //Calcualte the time it will take the pucks X coord to reach the paddles X coord
+        let millisecondsToPaddleX = distanceToPaddleX / puck.rigidBody.velocity.x;
+
+        //Calculate where the pucks y coord will be after millisecondsToPaddleX
+        let puckYIntercept = puck.rigidBody.position.y + puck.rigidBody.velocity.y * millisecondsToPaddleX
         
-        if(puck.rigidBody.position.y + puck.rigidBody.dimensions.y / 2 < this.paddle.rigidBody.position.y + this.paddle.rigidBody.dimensions.y / 2) {
-            this.paddle.rigidBody.acceleration.y = -0.025;
-        }
-
-        if(puck.rigidBody.position.y + puck.rigidBody.dimensions.y / 2 > this.paddle.rigidBody.position.y + this.paddle.rigidBody.dimensions.y / 2) {
-            this.paddle.rigidBody.acceleration.y = 0.025;
-        }
-
+        //Calculate required forces to intercept the pucks path
+        
+        
 
     }
     
