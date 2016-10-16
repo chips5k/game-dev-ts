@@ -24,4 +24,6 @@ export default class Puck implements GameStateObject {
        p.rigidBody.velocity = this.rigidBody.velocity.clone();
        return p;
     }
+
+    
 }

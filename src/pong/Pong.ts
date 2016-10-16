@@ -5,6 +5,7 @@ import PongSimulator from './PongSimulator';
 import Puck from './Puck';
 import Paddle from './Paddle';
 import PlayerController from './PlayerController';
+import AiController from './AiController';
 
 export default class Pong {
     engine: GameEngine;
@@ -19,10 +20,11 @@ export default class Pong {
         var puck = new Puck();
 
         let playerController = new PlayerController(paddleA);
+        let aiController = new AiController(paddleB);
 
         //Setup game core items
         let renderer = new PongRenderer(context, canvas);
-        let simulator = new PongSimulator(canvas, playerController);
+        let simulator = new PongSimulator(canvas, playerController, aiController);
         let state = new GameState();
         let engine = new GameEngine(window, state, renderer, simulator);
         

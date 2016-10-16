@@ -3,20 +3,20 @@ import GameState from '../core/GameState';
 import Puck from './Puck';
 import Paddle from './Paddle';
 import PlayerController from './PlayerController';
+import AiController from './AiController';
 
 export default class PongSimulator implements GameStateSimulator {
     delta: number = 0;
     elapsed: number = 0;
     state: GameState;
 
-    constructor(public canvas: HTMLCanvasElement, public playerController: PlayerController) {}
+    constructor(public canvas: HTMLCanvasElement, public playerController: PlayerController, public aiController: AiController) {}
 
     simulate(state: GameState, milliseconds: number) {
         this.delta = milliseconds;
         this.elapsed += this.delta;
         this.state = state;
         this.state.accept(this);
-       
     }
 
     visit(o: any) {
@@ -107,6 +107,7 @@ export default class PongSimulator implements GameStateSimulator {
             }
         }
 
+         this.aiController.handlePuckChange(puck);
 
     }
 
