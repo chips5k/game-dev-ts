@@ -17,12 +17,12 @@ export default class PlayerController {
 
     processInput() {
         
-        if(this.keysDown['a'] || this.keysDown['w']) {
+        if(this.keysDown['a'] || this.keysDown['w'] || this.keysDown['ArrowLeft'] || this.keysDown['ArrowUp']) {
             
             this.paddle.rigidBody.acceleration.y = -0.025;
         }
 
-        if(this.keysDown['s'] || this.keysDown['d']) {
+        if(this.keysDown['s'] || this.keysDown['d'] || this.keysDown['ArrowRight'] || this.keysDown['ArrowDown']) {
             this.paddle.rigidBody.acceleration.y = 0.025;
         }
     }

@@ -64,42 +64,44 @@ export default class PongSimulator implements GameStateSimulator {
 
         //Check paddle collisions
         for(let o of this.state.objects) {
-
+            //only check if not puck object - e.g the paddles
             if(o !== puck) {
+                //cast/set the paddle objects
                let b = (<Paddle>o).rigidBody;
 
+               //if colliding on the x axis
                if(
                    (r.position.x + r.dimensions.x >= b.position.x && r.position.x + r.dimensions.x <= b.position.x + b.dimensions.x) ||
                    (r.position.x >= b.position.x && r.position.x <= b.position.x + b.dimensions.x)
                ) {
 
+                   //if colliding on the y axis
                     if(
                         (r.position.y + r.dimensions.y >= b.position.y && r.position.y + r.dimensions.y <= b.position.y + b.dimensions.y) ||
                         (r.position.y >= b.position.y && r.position.y <= b.position.y + b.dimensions.y)
                     ) {
                         
-                        //Determine inset positions
-                        let insetLeft = r.position.x - b.position.x;
-                        if(insetLeft > 0) {
+                        //Determine inset positions - how far the puck penetrated the paddle
+                        let insetX = r.position.x - b.position.x;
+
+                        //If intersecting, adjust position to avoid travelling inside the obj.
+                        if(insetX > 0) {
                             r.position.x = b.position.x + b.dimensions.x;
                         } else {
                             r.position.x = b.position.x - r.dimensions.x;
                         }
 
+                        //reverse the velocity
                         r.velocity.x = -r.velocity.x;
 
-
+                        //Determine position of y axis collisions
                         let center = r.position.y + (r.dimensions.y / 2);
-                        let insetY = Math.round(center - b.position.y) / b.dimensions.y * 100;
+                        //Normalize to a value in the range of -0.5 to 0.5 to force up down movement
+                        let insetY = Math.round(center - b.position.y) / b.dimensions.y + -0.5;
                         
+                        //Apply a y velocity based on inset position and the paddle;
+                        r.velocity.y = 0.5 * insetY + b.velocity.y / 2;
                         
-                        if(insetY > 50) {
-                            r.velocity.y = 0.05;
-                        } else if(insetY < 50) {
-                            r.velocity.y = -0.05;
-                        } else {
-                            r.velocity.y = 0;
-                        }
                     }
                 }
             }
