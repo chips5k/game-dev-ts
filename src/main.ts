@@ -19,19 +19,6 @@ class RigidBody {
         this.acceleration.x += f.x;
     }
     
-    simulate(deltaTime: number) {
-        //Update position
-        this.position.y += this.velocity.y * deltaTime;
-        this.position.x += this.velocity.x * deltaTime;
-
-        //Update velocity
-        this.velocity.y += this.acceleration.y * deltaTime;
-        this.velocity.x += this.acceleration.x * deltaTime;
-
-        this.acceleration.y = 0;
-        this.acceleration.x = 0;
-    }
-
 }
 
 class Vector2d {
@@ -135,12 +122,32 @@ class Engine {
 
         for(let o of this.objects) {    
 
-            //Apply gravity
+             //Update position
+            o.position.y += o.velocity.y * deltaTime;
+            o.position.x += o.velocity.x * deltaTime;
+
+            //Check for collisions
+            if(o.position.y + o.height > this.canvas.height) {
+                //prevent clipping through the floor
+                o.position.y = this.canvas.height - o.height;
+            }
+
+            //Clear forces
+            o.acceleration.y = 0;
+            o.acceleration.x = 0;
+            
+            //Apply basic gravity
             o.applyForce(new Vector2d(0, 0.0096));
+
+            if(o.position.y + o.height >= this.canvas.height) {
+                o.velocity.y = 0;
+                o.applyForce(new Vector2d(0, -0.0096));
+            }
+
             //apply basic friction
             o.applyForce(new Vector2d(o.velocity.x * -0.0026, 0));
             
-            
+            //Handle input
             if(this.keysDown['d']) {
                 o.applyForce(new Vector2d(0.0007, 0));
             }
@@ -148,19 +155,17 @@ class Engine {
             if(this.keysDown['a']) {
                 o.applyForce(new Vector2d(-0.0007, 0));
             }
+
             if(this.keysDown[' ']) {
                 if(o.velocity.y == 0) {
-                    o.applyForce(new Vector2d(0, -0.08));
+                    o.applyForce(new Vector2d(0, -0.05));
                 }
             }
 
-            
-            o.simulate(deltaTime);
-            
-            if(o.position.y + o.height > this.canvas.height) {
-                o.velocity.y = 0;
-                o.position.y = this.canvas.height - o.height;
-            }
+             //Update velocity
+            o.velocity.y += o.acceleration.y * deltaTime;
+            o.velocity.x += o.acceleration.x * deltaTime;
+
         }
     }
 
