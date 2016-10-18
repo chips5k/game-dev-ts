@@ -19,6 +19,10 @@ class RigidBody {
         this.acceleration.x += f.x;
     }
     
+    clearForces() {
+        this.acceleration.y = 0;
+        this.acceleration.x = 0;
+    }
 }
 
 class Vector2d {
@@ -31,53 +35,44 @@ class Vector2d {
     }
 }
 
+class GameObject {
 
-class Engine {
+}
 
+class GameState {
+    gameObjects: GameObject[];
+
+    constructor() {
+        this.gameObjects = [];
+    }
+
+    update(deltaTime: number) {
+        var newState = new GameState();
+
+    }
+    
+}
+
+class InputManager {
     window: Window;
-    canvas: HTMLCanvasElement;
-    graphicsContext: CanvasRenderingContext2D; 
-
-    deltaTime: number;
-    currentLoopStartTime: number;
-    timeToSimulate: number;
-
     keysDown: { [id: string] : boolean};
-
+    //Clear any keys
     
-    
-    objects: RigidBody[];
 
-    constructor(window: Window, canvas: HTMLCanvasElement, graphicsContext: CanvasRenderingContext2D) {
+    constructor(window: Window) {
         this.window = window;
-        this.canvas = canvas;
-        this.graphicsContext = graphicsContext;
-        this.objects = [new RigidBody(20, 40, new Vector2d(30, 30))];
-    }
-
-    start() {
-        this.registerInputListeners();
-       
-
-        //updates per second - 60 updates per 1000 millisecond
-        this.deltaTime = 1000 / 60;
-
-        //Setup timers/trackers to default initial values
-        this.currentLoopStartTime = this.window.performance.now();
-        this.timeToSimulate = 0;
-
-        //Trigger the initial loop
-        this.loop();
-    }
-
-    registerInputListeners() {
-        //Clear any keys
         this.keysDown = {};
+        this.registerListeners();
+    }
 
+    //This approach works for simple cases, but will eventually fall down.
+    //a better approach might be to queue up the received events, and consume them
+    //Cases such as detecting key release events, or timed events not handled in this setup
+    registerListeners() {
         this.window.addEventListener('keydown', (e: KeyboardEvent) => { this.handleKeyDown(e); });
         this.window.addEventListener('keyup', (e: KeyboardEvent) => { this.handleKeyUp(e); });
     }
-
+    
     handleKeyDown(e: KeyboardEvent) { 
         this.keysDown[e.key] = true; 
     }
@@ -85,8 +80,52 @@ class Engine {
     handleKeyUp(e: KeyboardEvent) {
        delete this.keysDown[e.key];
     }
-    
-    
+
+    keyDown(key: string) {
+
+        switch(key) {
+            case 'space':
+                return this.keysDown[' '];
+        }
+
+        return this.keysDown[key];
+    }
+}
+
+
+class Engine {
+
+    window: Window;
+    canvas: HTMLCanvasElement;
+    graphicsContext: CanvasRenderingContext2D; 
+    inputManager: InputManager;
+
+    deltaTime: number;
+    currentLoopStartTime: number;
+    timeToSimulate: number;
+
+    objects: RigidBody[];
+
+    constructor(window: Window, canvas: HTMLCanvasElement, graphicsContext: CanvasRenderingContext2D) {
+        this.window = window;
+        this.canvas = canvas;
+        this.graphicsContext = graphicsContext;
+        this.objects = [new RigidBody(20, 40, new Vector2d(30, 30))];
+
+        //updates per second - 60 updates per 1000 millisecond
+        this.deltaTime = 1000 / 60;
+        this.inputManager = new InputManager(window);
+    }
+
+    start() {
+       //Setup timers/trackers to default initial values
+        this.currentLoopStartTime = this.window.performance.now();
+        this.timeToSimulate = 0;
+
+        //Trigger the initial loop
+        this.loop();
+    }
+
     loop() {
 
         //Queue the next run of this function FIRST - apparantly this is the best
@@ -133,8 +172,7 @@ class Engine {
             }
 
             //Clear forces
-            o.acceleration.y = 0;
-            o.acceleration.x = 0;
+            o.clearForces();
             
             //Apply basic gravity
             o.applyForce(new Vector2d(0, 0.0096));
@@ -148,21 +186,21 @@ class Engine {
             o.applyForce(new Vector2d(o.velocity.x * -0.0026, 0));
             
             //Handle input
-            if(this.keysDown['d']) {
+            if(this.inputManager.keyDown('d')) {
                 o.applyForce(new Vector2d(0.0007, 0));
             }
 
-            if(this.keysDown['a']) {
+            if(this.inputManager.keyDown('a')) {
                 o.applyForce(new Vector2d(-0.0007, 0));
             }
 
-            if(this.keysDown[' ']) {
+            if(this.inputManager.keyDown('space')) {
                 if(o.velocity.y == 0) {
                     o.applyForce(new Vector2d(0, -0.05));
                 }
             }
 
-             //Update velocity
+            //Update velocity
             o.velocity.y += o.acceleration.y * deltaTime;
             o.velocity.x += o.acceleration.x * deltaTime;
 
